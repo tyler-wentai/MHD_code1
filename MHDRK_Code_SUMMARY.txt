@@ -1,0 +1,23 @@
+MHDRK CODE SUMMARY:
+
+MHDRK_codeV1.0:
+(2020/11/12)
+	* Built the MHDRK code for full domain and half x-domain. The full domain seems to be more stable compared to the half x-domain code. 
+
+
+MHDRK_codeV1.1:
+(2020/11/13)
+	* [Upgrade on MHDRK_codeV1.0]
+	* This new code uses dPsi to update both the Bx and By magnetic field components AND to update the Jz component of the current density. Before, the code used dBx and dBy to update Jz, this undoubtedly introduced cutoff errors in the derivatives that could plague Jz. 
+
+
+MHDRK_codeV1.2:
+(2020/11/14):
+	* [Upgrade on MHDRK_codeV1.1]
+	* This code now uses a 4-point differencing to update ALL points along the j=1 row for ALL variables. 
+
+
+MHDRK_codeV1.3:
+(2020/11/15):
+	* [Upgrade on MHDRK_codeV1.1]
+	* This code allows the mass density (rho: X0) to evolve self-consistently at the bottom boundary by its governing equation. All other variables are kept the same as before. 

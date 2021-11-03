@@ -1,0 +1,93 @@
+MHD CODE SUMMARY:
+
+MHD_codeV1.0:
+
+
+MHD_codeV1.1:
+
+
+MHD_codeV1.2:
+	Full domain in x (no symmetry boundary at x=0).
+
+
+MHD_codeV1.3:
+(2020/10/23)
+	First time successfully implementing half-domain configuration/symmetry. 
+
+
+MHD_codeV1.4: 
+(2020/10/25)
+	Expanding on MHD_codeV1.3 to speed up c_matrix building. 
+
+
+MHD_codeV1.5: 
+(2020/10/26) 
+	The instability that is occurring around shear=~0.68 at the origin is not due to the symmetry conditions imposed at the left boundary since the full domain simulation also collapsed in the same way (seen in simulation MHD_code_V1.2a).
+(2020/10/27)
+	Changing the viscosity term in the momentum equations in MHD_codeV1.4 to that actually employed in CL(1996).
+	* Smoothing coefficient of 1/100 is still not enough with the added viscosity terms to prevent algorithm termination around shear=0.39.
+	*  Smoothing coefficient of 1/60 is not enough either.
+
+
+MHD_codeV1.6:
+(2020/10/28)
+	* Reverting back to previous viscosity form seen in CL(1992), except adding an extra term for biased smoothing near the origin: vis1=1/100, vis2=1/25. RESULTS: Still crashes due to trouble at the origin but much later than before. Might just need to increase the range of near-origin smoothing profile. Also, there is strange negative x-direction motion along the j=1 row around (0.5<x<1.0).
+
+
+MHD_codeV1.7:
+(2020/10/29)
+	* Added a new sparse matrix solver for calculating the advanced velocity values using SciPy's advanced linear algebra functions/methods. 
+
+
+MHD_codeV1.8:
+(2020/11/02)
+	* Now calculating the y-direction pressure and gravity balance by using the perturbed values of rho (mass density). This is perhaps not ideal..., but seems to be a quick solution of the current problem. [WILL DECIDE ON A BETTER ALGORITHM LATER.]
+
+	GRIDDING TEST: 	Trying to determine the bottom boundary's instability dependence 			on the gridding resolution. (NO BOTTOM BOUNDARY SMOOTHING.)
+	V1.8a: 	(mxp,myp):		(91,141)
+		(dx_min,dy_min):	(1/11,1/11)
+		(xmax,ymax):		(22.5,40.0)
+		dt: 			0.06818181818181818
+
+		CRASHED at SHEAR:	1.31580
+	
+	V1.8b:  (mxp,myp):		(91,141)
+		(dx_min,dy_min):	(1/17,1/17)
+		(xmax,ymax):		(22.5,40.0)
+		dt: 			0.044117647058823525
+
+		CRASHED at SHEAR:	1.14831
+
+	V1.8c:  (mxp,myp):		(91,141)
+		(dx_min,dy_min):	(1/11,1/11)
+		(xmax,ymax):		(22.5,40.0)
+		dt: 			0.022727272727272728
+		
+		CRASHED at SHEAR:	1.35761
+
+
+MHD_codeV1.9:
+(2020/11/08)
+	* Going to calculate y-derivatives at j=1 using a four-point, upward-biased differencing to seem if this helps with reducing the artificial behavior seen near the origin at the j=1 right above the boundary layer. 
+
+
+
+
+
+
+
+MHD_codeV1.12:
+(2020/11/08)
+	* [Upgrade on MHD_codeV1.11]
+	* Upgraded the code to calculate the CSC matrix indices for vx,vy,vz at the beginning of the code (only needed once) instead of at every time step in calc_cMATRIX function. Increase of program speed by approximately 10%. 
+	* Added a record() function to record all and compile all simulated variables. 
+	* Noticed from Choe and Lee's papers that our resolution in x around the origin is too coarse. Decreased minimum dx from 1/11 to 1/20.
+
+
+MHD_codeV1.13:
+(2020/11/24)
+	* [Upgrade on MHD_codeV1.12]
+	* Upgraded the code to include the ability to load a previous recorded simulation to restart simulation.
+	* Added the ability to decelerate the photospheric shear flow. 
+	* Added the pertinent subroutines to calculate the resistivity terms in the governing equations for psi and Bz. 
+
